@@ -46,7 +46,8 @@ public class UserFileProvider implements UserProvider {
                 .name(lineResult[0])
                 .lastName(lineResult[1])
                 .login(lineResult[2])
-                .password(lineResult[3])
+                .email(lineResult[3])
+                .password(lineResult[4])
                 .address(mapToAddress(lineResult))
                 .roles(mapToRoles(lineResult))
                 .build();
