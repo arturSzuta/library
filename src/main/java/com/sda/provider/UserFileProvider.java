@@ -3,6 +3,7 @@ package com.sda.provider;
 import com.sda.model.Address;
 import com.sda.model.Role;
 import com.sda.model.User;
+import lombok.NoArgsConstructor;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor
 public class UserFileProvider implements UserProvider {
 
     private String filePath = "src/main/resources/users";
@@ -24,11 +26,11 @@ public class UserFileProvider implements UserProvider {
     @Override
     public Set<User> getAllUsers() {
         Set<User> users = new HashSet<>();
-        addAllUsersFromFileToList(users);
+        addAllUsersFromFileToSet(users);
         return users;
     }
 
-    private void addAllUsersFromFileToList(Set<User> users) {
+    private void addAllUsersFromFileToSet(Set<User> users) {
         try (BufferedReader bufferedReader =
                      new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -42,7 +44,7 @@ public class UserFileProvider implements UserProvider {
 
     private User mapToUser(String userLine) {
         String[] lineResult = userLine.split(";");
-        User.builder()
+        return User.builder()
                 .name(lineResult[0])
                 .lastName(lineResult[1])
                 .login(lineResult[2])
@@ -51,23 +53,21 @@ public class UserFileProvider implements UserProvider {
                 .address(mapToAddress(lineResult))
                 .roles(mapToRoles(lineResult))
                 .build();
-
-        return null;
-    }
-
-    private List<Role> mapToRoles(String[] lineResult) {
-        return Arrays.stream(lineResult[8].split("/"))
-                .map(Role::valueOf)
-                .collect(Collectors.toList());
     }
 
     private Address mapToAddress(String[] lineResult) {
         return Address.builder()
-                .street(lineResult[4])
-                .buildingNo(lineResult[5])
-                .apartmentNo(lineResult[6])
-                .postalCode(lineResult[7])
+                .street(lineResult[5])
+                .buildingNo(lineResult[6])
+                .apartmentNo(lineResult[7])
+                .postalCode(lineResult[8])
                 .build();
+    }
+
+    private List<Role> mapToRoles(String[] lineResult) {
+        return Arrays.stream(lineResult[9].split("/"))
+                .map(Role::valueOf)
+                .collect(Collectors.toList());
     }
 
 }
